@@ -1,5 +1,7 @@
 package com.ferreusveritas.dynamictrees.models;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -25,8 +27,8 @@ public class ModelTrackerCacheEntityFallingTree {
 	}
 	
 	public static void cleanupModels(World world) {
-		modelMap = modelMap.entrySet().stream()
-			.filter( map -> world.getEntityByID(map.getKey()) != null )
-			.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+		List<Integer> removeList = new ArrayList<>();
+		modelMap.forEach((k, v) -> if (world.getEntityByID(k) == null) removeList.add(k));
+		removeList.forEach(k -> modelMap.remove(k));
 	}
 }
